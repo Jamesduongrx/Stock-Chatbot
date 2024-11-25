@@ -12,12 +12,12 @@ import datetime
 import logging
 import re
 import sqlite3
-
 import groq
 from groq import Groq
 import os
 import requests
 from bs4 import BeautifulSoup
+import finnhub
 
 ################################################################################
 # LLM functions
@@ -27,6 +27,9 @@ client = Groq(
     api_key=os.environ.get("GROQ_API_KEY"),
 )
 
+finnhub_client = finnhub.Client(
+    api_key=os.environ.get("FINN_API_KEY"),
+    )
 
 def run_llm(system, user, model='llama3-8b-8192', seed=None):
     '''
@@ -48,31 +51,9 @@ def run_llm(system, user, model='llama3-8b-8192', seed=None):
     )
     return chat_completion.choices[0].message.content
 
-
 def summarize_text(text, seed=None):
     system = 'Summarize the input text below. Limit the summary to 1 paragraph. Use an advanced reading level similar to the input text, and ensure that all people, places, and other proper names and dates are included in the summary. The summary should be in English. Only include the summary.'
     return run_llm(system, text, seed=seed)
-
-
-def translate_text(text):
-    system = 'You are a professional translator working for the United Nations. The following document is an important news article that needs to be translated into English. Provide a professional translation.'
-    return run_llm(system, text)
-
-def keywords_fixer(text, seed=None):
-    if not isinstance(text, str):
-        raise ValueError("Input must be a string of keywords.")
-    
-    system = """
-        The text input should be a string of keywords separated by spaces. 
-        If there are more than 10 words in the string, remove half of them and return the remaining string. 
-        Removing keywords that are not real words or contain hyphens (-) or underscores (_).
-        Do not remove dates or names.
-        Only provide the new string of keywords with spaces between each words.
-        Do not add any extra details, opinions, or unnecessary explanations.
-        Stop responding after providing the new string.
-        """
-    return run_llm(system, text, seed=seed)
-
 
 def extract_keywords(text, seed=None):
     '''
@@ -89,16 +70,14 @@ def extract_keywords(text, seed=None):
     Do not answer the question. 
     Only provide a string containing 5-10 of the top keywords relevant to the topic that would benefit a search for articles online relating to the question. 
     Separate each keyword with a space. 
-    Prioritize names and dates in the string of keywords.
+    Prioritize names, actions, and dates in the string of keywords.
     Follow these rules:
-    1. Preserve numbers and special characters, but ensure that they are formatted correctly to avoid issues in a query.
-    2. Escape or format any special characters (like single quotes, apostrophes, etc.) that could cause problems in a query.
-    3. Return the keywords as a single string, formatted such that numbers and special characters do not break any query syntax.
-    For example, if the question is: 'What is Trump's immigration policy regarding illegal Mexican immigrants?', an acceptable output would be: Trump Mexico immigration policy.
-    Another example, if the question is: 'Who is the current democratic presidential nominee?' , an acceptable output would be: Democratic nominee 2024.
+    1. Escape or format any special characters (like single quotes, apostrophes, etc.) that could cause problems in a query.
+    2. Return the keywords as a single string, formatted such that numbers and special characters do not break any query syntax.
+    For example, if the question is: 'Does Bloomberg recommend buying for Apple?', an acceptable output would be: Bloomberg apple recommendation.
+    Another example, if the question is: 'What are some of the challenges Tesla is currently facing?' , an acceptable output would be: Tesla recent challenges.
     """
     keywords = run_llm(system, text, seed=seed)
-    #return keywords_fixer(keywords)
     return keywords
 
 

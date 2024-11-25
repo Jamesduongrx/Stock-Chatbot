@@ -57,3 +57,4 @@ uritools==4.0.3
 url-normalize==1.4.3
 urllib3==1.26.5
 warcio==1.7.4
+finnhub-python
