@@ -27,10 +27,6 @@ client = Groq(
     api_key=os.environ.get("GROQ_API_KEY"),
 )
 
-finnhub_client = finnhub.Client(
-    api_key=os.environ.get("FINN_API_KEY"),
-    )
-
 def run_llm(system, user, model='llama3-8b-8192', seed=None):
     '''
     This is a helper function for all the uses of LLMs in this file.
@@ -54,6 +50,17 @@ def run_llm(system, user, model='llama3-8b-8192', seed=None):
 def summarize_text(text, seed=None):
     system = 'Summarize the input text below. Limit the summary to 1 paragraph. Use an advanced reading level similar to the input text, and ensure that all people, places, and other proper names and dates are included in the summary. The summary should be in English. Only include the summary.'
     return run_llm(system, text, seed=seed)
+
+def extract_company(keywords, seed=None):
+    system = 'Identify what company the user is interested in learning more about. Only return that company in your output. If the user does not reference any company, return nothing. If the user '
+    return run_llm(system, keywords, seed=seed)
+
+def extract_date(keywords, seed=None):
+    system = '''Identify what date range the user is interested in. 
+    This will be used to search for articles relevant to the date range the user mentions. 
+    Only output a list with two string variables, the first being the start date in YYYY-MM-DD format and the second being the end date also in YYYY-MM-DD format. 
+    If the user does not reference any specific dates, output the list with the start date being one month in before today YYYY-MM-DD format and the end date being today in YYYY-MM-DD format.'''
+    return run_llm(system, keywords, seed=seed)
 
 def extract_keywords(text, seed=None):
     '''
@@ -79,6 +86,51 @@ def extract_keywords(text, seed=None):
     """
     keywords = run_llm(system, text, seed=seed)
     return keywords
+
+finnhub_client = finnhub.Client(
+    api_key=os.environ.get("FINN_API_KEY"),
+    )
+
+def get_symbol(keywords):
+    return finnhub_client.symbol_lookup(keywords)
+
+def get_most_popular_symbol(keywords):
+    company = extract_company(keywords)
+    if company is None:
+        return "No company mentioned by user"
+    else:
+        search_results = get_symbol(company)
+        if search_results['count'] == 0:
+            return "No results found."
+        # Filter for 'Common Stock' or other criteria for popularity
+        common_stocks = [
+            item for item in search_results['result'] 
+            if item['type'] == 'Common Stock'
+        ]
+        # If there are common stocks, return the first one
+        if common_stocks:
+            return common_stocks[0]['displaySymbol']
+        # Fallback: return the first result if no common stocks are found
+        return search_results['result'][0]['displaySymbol']
+
+def get_quote(ticker):
+    return finnhub_client.quote(ticker)
+    
+def get_news(ticker, keywords):
+    dates = extract_date(keywords)
+    news_results = finnhub_client.company_news(ticker, _from=dates[0], to=dates[1])
+    if news_results is None:
+        return "No news results found"
+    articles = []
+    for row in news_results:
+        articles.append({
+            'headline': news_results['headline'],
+            'sourcd': news_results['source'],
+            'summary': news_results['summary'],
+            'url': news_results['url']
+                })
+    return articles
+
 
 
 ################################################################################
@@ -137,7 +189,7 @@ def rag(text, db):
             logging.warning(f"Article with title '{article['title']}' has no text content.")
     if not string_articles:
         return "No relevant articles with text found for the query."
-    string_articles = summarize_text(translate_text(string_articles))
+    string_articles = summarize_text(string_articles)
     system += string_articles
     system += f"User query: {text}"
 
