@@ -115,7 +115,7 @@ $ python3 test_chatbot1.py
 #### Output:
 
 ```
-Accuracy: 5/6
+Accuracy: 5/6 (83.33%)
 ```
 
 #### Test Case 2: Stock Recommendation Matching
