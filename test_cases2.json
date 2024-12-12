@@ -1,0 +1,5 @@
+[
+    {"company": "Apple", "challenges": ["cybersecurity", "competition"]},
+    {"company": "Tesla", "challenges": ["demand", "CEO"]},
+    {"company": "Microsoft", "challenges": ["antitrust", "gaming"]}
+]

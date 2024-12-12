@@ -1,11 +1,8 @@
 [
-    {"company": "Apple", "source": "Yahoo Finance", "recommendation": "buy"},
     {"company": "Apple", "source": "Bloomberg", "recommendation": "buy"},
-    {"company": "Apple", "source": "MorningStar", "recommendation": "hold"},
+    {"company": "Apple", "source": "MorningStar", "recommendation": "buy"},
     {"company": "Tesla", "source": "Yahoo Finance", "recommendation": "hold"},
-    {"company": "Tesla", "source": "Bloomberg", "recommendation": "buy"},
-    {"company": "Tesla", "source": "MorningStar", "recommendation": "hold"},
+    {"company": "Tesla", "source": "Google Finance", "recommendation": "buy"},
     {"company": "Microsoft", "source": "Yahoo Finance", "recommendation": "buy"},
-    {"company": "Microsoft", "source": "Bloomberg", "recommendation": "buy"},
-    {"company": "Microsoft", "source": "MorningStar", "recommendation": "hold"}
+    {"company": "Microsoft", "source": "CNBC", "recommendation": "buy"}
 ]

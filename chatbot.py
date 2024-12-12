@@ -145,7 +145,7 @@ def google_search(query, api_key, cse_id, num_results=5, date_restrict="m1"):
         "num": num_results,
         "dateRestrict": date_restrict  # Filter results based on recency
        }
-    preferred_domains = ["finance.yahoo.com", "bloomberg.com", "morningstar.com", "seekingalpha.com", "nasdaq.com"]
+    preferred_domains = ["finance.yahoo.com", "bloomberg.com", "morningstar.com", "cnbc.com", "seekingalpha.com", "nasdaq.com"]
     blacklist = ["investors.com", "marketwatch.com", "reuters.com", "motleyfool.com"]
 
     try:
@@ -209,7 +209,7 @@ def generate_response(user_query):
     """
     Generate a response by searching for articles and summarizing their content.
     """
-    articles = google_search(user_query, GOOGLE_API_KEY, GOOGLE_CSE_ID, num_results=5)
+    articles = google_search(user_query, GOOGLE_API_KEY, GOOGLE_CSE_ID, num_results=3)
     if not articles:
         return "No relevant articles found. Please refine your query."
 
@@ -219,7 +219,7 @@ def generate_response(user_query):
         link = article["link"] or "No link"
         content = fetch_article_content(link)
         if content:
-            summary = summarize_text(content)
+            summary = summarize_text(content[:1000])
             valid_articles.append(f"Title: {title}\nURL: {link}\nSummary: {summary}")
         else:
             logging.info(f"Skipping inaccessible article: {link}")
