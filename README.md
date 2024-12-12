@@ -1,11 +1,18 @@
 ![](https://github.com/Jamesduongrx/Stock-Chatbot/actions/workflows/tests.yml/badge.svg)
 
-## Overview
+# Stock Recommendation Chatbot: Overview
 
+The **Stock Recommendation Chatbot** is an intelligent assistant designed to deliver stock recommendations and pitch-ready investment insights. By leveraging real-time financial data, news articles, and user inputs, it supports decision-making for buying, holding, or selling stocks, as well as answering general market-related questions.
 
-The Stock Recommendation Chatbot is a chatbot assistant designed to provide stock recommendations and pitch-ready investment insights. By analyzing real-time financial data, news articles, and user inputs, the chatbot can help users make informed decisions about buying, holding, or selling stocks as well as general market or stock questions.
+## Key features include:
+	1.	**Real-Time Analysis**
+        Processes financial news, company performance, and market trends to provide timely and accurate insights.
+	2.	**User-Centric Design**
+        Tailors recommendations based on user queries and preferences.
+	3.	**Investment Pitch Support**
+        Generates insights ready for pitching to investment clubs or for personal strategies.
 
-With its ability to analyze recent events, company performance, and market trends, the chatbot delivers concise insights tailored to user queries. 
+This chatbot is built to offer precise, actionable advice to assist users in navigating complex financial landscapes efficiently.
 
 ## Getting Started
 
