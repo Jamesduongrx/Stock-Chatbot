@@ -1,13 +1,14 @@
 #!/bin/python3
-'''
-Run an interactive QA session using Groq LLM API, concurrent financial data from Finnhub API, article search using Google API, and retrieval augmented generation (RAG).
-'''
+"""
+Run an interactive Question-Answering (QA) chatbot session that integrates multiple advanced functionalities:
+- Leverages the Groq LLM API for natural language processing and intelligent responses.
+- Utilizes the Finnhub API to retrieve real-time financial data for market insights.
+- Performs article searches through the Google API for relevant, up-to-date information.
+- Implements Retrieval-Augmented Generation (RAG) for enhanced context-driven answers.
+"""
 
-from urllib.parse import urlparse
-import datetime
 import logging
 import re
-import sqlite3
 import groq
 from groq import Groq
 import os
@@ -17,7 +18,7 @@ from bs4 import BeautifulSoup
 import finnhub
 
 ################################################################################
-# LLM functions
+# Core LLM and API Functions
 ################################################################################
 
 client = Groq(
@@ -26,8 +27,6 @@ client = Groq(
 finnhub_client = finnhub.Client(
     api_key=os.environ.get("FINN_API_KEY"),
     )
-
-#Google API Key Access
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID")
 
@@ -67,71 +66,6 @@ def get_popular_symbol(input, seed=None):
     Return only the stock ticker in your response.'''
     return run_llm(system, input, seed=seed)
 
-
-def extract_date(input, seed=None):
-    '''Uses Finnhub API to get a date range given a user query. Defaults to the past month if no date specified.'''
-    system = '''Identify what date range the user is interested in. 
-    This will be used to search for articles relevant to the date range the user mentions. 
-    Only output a list with two string variables, the first being the start date in YYYY-MM-DD format and the second being the end date also in YYYY-MM-DD format. 
-    If the user does not reference any specific dates, output the list with the start date being one month in before today YYYY-MM-DD format and the end date being today in YYYY-MM-DD format.
-    Do not include time.'''
-    return run_llm(system, input, seed=seed)
-
-def extract_keywords(text, seed=None):
-    '''
-    This is a helper function for RAG.
-    Given an input text, this function extracts the keywords that will be used to perform the search for articles that will be used in RAG.
-    '''
-
-    system = """
-    Do not answer the question. 
-    Only provide a string containing 5-10 of the top keywords relevant to the topic that would benefit a search for articles online relating to the question. 
-    Separate each keyword with a space. 
-    Prioritize names, actions, and dates in the string of keywords.
-    Follow these rules:
-    1. Escape or format any special characters (like single quotes, apostrophes, etc.) that could cause problems in a query.
-    2. Return the keywords as a single string, formatted such that numbers and special characters do not break any query syntax.
-    For example, if the question is: 'Does Bloomberg recommend buying for Apple?', an acceptable output would be: Bloomberg Apple recommendation.
-    Another example, if the question is: 'What are some of the challenges Tesla is currently facing?', an acceptable output would be: Tesla recent challenges.
-    """
-    keywords = run_llm(system, text, seed=seed)
-    return keywords
-
-#Finnhub functions
-def get_symbol(input):
-    '''finds the stock symbol given a user input like Apple using the Finnhub API'''
-    return finnhub_client.symbol_lookup(input)
-
-def get_valid_symbol(input):
-    """Identifies the most likely stock ticker of interest given an input string using the Finnhub API."""
-    ticker = get_popular_symbol(input)
-    print(ticker) #testing
-    # Ensure the ticker is valid in Finnhub's system
-    if (ticker):
-        search_results = get_symbol(input)
-        if search_results['count'] == 0:
-            return "No results found."
-        
-        # Filter for 'Common Stock'
-        common_stocks = [item for item in search_results['result'] if item.get('type') == 'Common Stock']
-        
-        # Prioritize symbols on major exchanges (e.g., NASDAQ, NYSE)
-        major_exchanges = ['NASDAQ', 'NYSE']
-        major_stocks = [
-            item for item in common_stocks 
-            if any(exchange in item.get('displaySymbol', '') for exchange in major_exchanges)
-        ]
-        
-        # Return the best match
-        if major_stocks:
-            return major_stocks[0]['displaySymbol']
-        if common_stocks:
-            return common_stocks[0]['displaySymbol']
-        if search_results['result']:
-            return search_results['result'][0]['displaySymbol']
-        
-        return "No suitable match found."
-
 def get_quote(ticker):
     '''Gets financial stock information given a stock ticker using Finnhub API and returns it as a string'''
     quote = finnhub_client.quote(ticker)
@@ -167,28 +101,12 @@ def get_recommendations(ticker):
             f"Strong Sell: {trend['strongSell']}\n"
         )
     return output.strip()
-    
-def get_news(ticker, input):
-    '''Gets news articles relating to the Stock ticker using Finnhub API'''
-    dates = extract_date(input)
-    news_results = finnhub_client.company_news(ticker, _from=dates[0], to=dates[1])
-    if news_results is None:
-        return "No news results found."
-    articles = []
-    for row in news_results:
-        articles.append({
-            'headline': row['headline'],
-            'source': row['source'],
-            'summary': row['summary'],
-            'url': row['url']
-                })
-    return articles
+
 
 ################################################################################
-# helper functions
+# Google and Article Processing Functions
 ################################################################################
 
-#Google Functions
 def google_search(query, api_key, cse_id, num_results=5):
     """
     Perform a Google Custom Search for articles based on the query.
@@ -242,7 +160,7 @@ def fetch_article_content(url):
         return None
 
 ################################################################################
-# Article Summary Generator
+# Article Search and Summary Generator
 ################################################################################
 
 def generate_response(user_query):
@@ -270,16 +188,13 @@ def generate_response(user_query):
     return "\n\n".join(valid_articles)
 
 ################################################################################
-# rag
+# RAG Handler
 ################################################################################
 
 def rag(text):
     '''
     This function uses retrieval augmented generation (RAG) to generate an LLM response to the input text.
     '''
-    #keywords = extract_keywords(text)
-    #sanitized_keywords = keywords.replace("'", "''")
-    #print(f"Keywords: {sanitized_keywords}")  # testing
 
     ticker = get_popular_symbol(text)
     print(f"Stock Ticker: {ticker}")
@@ -291,7 +206,7 @@ def rag(text):
     print(f"Recommendations: {recommendations}") #testing
 
     article_summaries = generate_response(text)
-    #print(f"Article Summaries: {article_summaries}") #testing
+    #print(f"Article Summaries: {article_summaries}\n") #testing
 
     system = """You are a professional stock analyst and advisor tasked with answering user queries based on the provided information. 
     Do not take into account any knowledge outside of the articles in your answer.
@@ -303,9 +218,7 @@ def rag(text):
     Stop responding once you have provided the necessary answer.
     """
     system += quote
-    #system += "Analyst Recommendations:"
     system += recommendations
-    #system += "Articles:"
     system += article_summaries
     system += f"User query: {text}"
 
@@ -313,7 +226,7 @@ def rag(text):
 
 
 ################################################################################
-# Main Program
+# Main Interactive Chatbot Program
 ################################################################################
 
 if __name__ == "__main__":
@@ -322,7 +235,7 @@ if __name__ == "__main__":
        datefmt='%Y-%m-%d %H:%M:%S',
        level=logging.WARNING,
    )
-   print("Please include the name of the company or its ticker and your question in complete sentences.")
+   print("Please include the name of the company or its ticker and your question in complete sentences.\nEnter 'exit' or 'quit' to end the conversation.")
    while True:
     try:
         query = input("Stock Recommendation Chatbot: ").strip()
