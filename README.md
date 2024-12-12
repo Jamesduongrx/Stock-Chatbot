@@ -6,11 +6,11 @@ The **Stock Recommendation Chatbot** is an AI-powered assistant designed to deli
 
 ## Key features include:
 1.	**Real-Time Analysis**
-    Processes financial news, company performance, and market trends to provide timely and accurate insights.
+    Processes concurrent financial news, company performance, and market trends to provide timely and accurate insights.
 2.	**User-Centric Design**
     Tailors recommendations based on user queries and preferences.
 3.	**Investment Pitch Support**
-    Generates insights ready for pitching to investment clubs or for personal strategies.
+    Generates insights ready for pitching to investment funds or for personal strategies.
 
 This chatbot is built to offer precise, actionable advice to assist users in navigating complex financial landscapes efficiently.
 
