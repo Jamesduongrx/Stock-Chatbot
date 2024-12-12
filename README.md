@@ -1,22 +1,24 @@
 ![](https://github.com/Jamesduongrx/Stock-Chatbot/actions/workflows/tests.yml/badge.svg)
 
-# Stock Recommendation Chatbot: Overview
+# Stock Recommendation Chatbot
+
+## Overview
 
 The **Stock Recommendation Chatbot** is an intelligent assistant designed to deliver stock recommendations and pitch-ready investment insights. By leveraging real-time financial data, news articles, and user inputs, it supports decision-making for buying, holding, or selling stocks, as well as answering general market-related questions.
 
 ## Key features include:
-	1.	**Real-Time Analysis**
-        Processes financial news, company performance, and market trends to provide timely and accurate insights.
-	2.	**User-Centric Design**
-        Tailors recommendations based on user queries and preferences.
-	3.	**Investment Pitch Support**
-        Generates insights ready for pitching to investment clubs or for personal strategies.
+1.	**Real-Time Analysis**
+    Processes financial news, company performance, and market trends to provide timely and accurate insights.
+2.	**User-Centric Design**
+    Tailors recommendations based on user queries and preferences.
+3.	**Investment Pitch Support**
+    Generates insights ready for pitching to investment clubs or for personal strategies.
 
 This chatbot is built to offer precise, actionable advice to assist users in navigating complex financial landscapes efficiently.
 
 ## Getting Started
 
-# Prerequisites
+### Prerequisites
 
 Before proceeding, check that you have the following installed:
 
@@ -26,7 +28,7 @@ Before proceeding, check that you have the following installed:
 - Google API Key
 - GOOGLE CSE ID
 
-# Installation
+### Installation
 1. **Clone the repository:**
 ```
 $ git clone https://github.com/Jamesduongrx/Stock-Chatbot
@@ -57,16 +59,14 @@ $ pip3 install -r requirements.txt
     GOOGLE_API_KEY=your_google_api_key_here
     GOOGLE_CSE_ID=your_google_cse_id_here
     FINN_API_KEY=your_finnhub_api_key_here
-
     ```
 
     - Export the environmental variables:
-
         ```
         $ export $(cat .env)
         ```
 
-## Running the Application
+### Running the Application
 Once your environment is set up, you can start Chatbot:
 ```
 $ python3 chatbot.py
