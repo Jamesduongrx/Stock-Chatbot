@@ -1,10 +1,6 @@
 #!/bin/python3
-
 '''
-Run an interactive QA session with the news articles using the Groq LLM API and retrieval augmented generation (RAG).
-
-New articles can be added to the database with the --add_url parameter,
-and the path to the database can be changed with the --db parameter.
+Run an interactive QA session using Groq LLM API, concurrent financial data from Finnhub API, article search using Google API, and retrieval augmented generation (RAG).
 '''
 
 from urllib.parse import urlparse
@@ -57,7 +53,7 @@ def run_llm(system, user, model='llama3-8b-8192', seed=None):
     return chat_completion.choices[0].message.content
 
 def summarize_text(text, seed=None):
-    system = 'Summarize the input text below. Limit the summary to 1 paragraph. Use an advanced reading level similar to the input text, and ensure that all people, places, and other proper names and dates are included in the summary. The summary should be in English. Only include the summary.'
+    system = 'Summarize the input text below. Limit the summary to 1 paragraph. Use an advanced reading level similar to the input text, and ensure that all people, places, and other proper names and dates are included in the summary. Only include the summary.'
     return run_llm(system, text, seed=seed)
 
 def get_popular_symbol(input, seed=None):
