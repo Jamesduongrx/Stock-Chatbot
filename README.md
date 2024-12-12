@@ -13,7 +13,7 @@ With its ability to analyze recent events, company performance, and market trend
 Before proceeding, check that you have the following installed:
 
 - Python 3.8 or 3.9
-- Groq API key (instructions below)
+- Groq API key
 - Finnhub API Key
 - Google API Key
 - GOOGLE CSE ID
