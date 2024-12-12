@@ -2,7 +2,9 @@
 
 ## Overview
 
-`ragnews` is a Python-based Question & Answer (Q&A) system that integrates with the Groq API and leverages Retrieval-Augmented Generation (RAG). This system retrieves relevant news articles from a user-provided database to generate accurate, real-time responses to user queries. RAGNews is designed for users looking to enhance the capabilities of Groq models by pulling from up-to-date news sources.
+The Stock Recommendation Chatbot is a chatbot assistant designed to provide stock recommendations and pitch-ready investment insights. By analyzing real-time financial data, news articles, and user inputs, the chatbot can help users make informed decisions about buying, holding, or selling stocks as well as general market or stock questions.
+
+With its ability to analyze recent events, company performance, and market trends, the chatbot delivers concise insights tailored to user queries. 
 
 ## Key Features
 
