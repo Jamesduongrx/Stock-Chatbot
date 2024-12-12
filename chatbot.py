@@ -15,7 +15,7 @@ import os
 import requests
 import readline
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, timezone
 import finnhub
 
 ################################################################################
@@ -53,6 +53,7 @@ def run_llm(system, user, model='llama3-8b-8192', seed=None):
     return chat_completion.choices[0].message.content
 
 def summarize_text(text, seed=None):
+    "Summarizes the input text into a paragraph and keeps relevant stock information"
     system = '''Summarize the input text below.
     Limit the summary to 1 paragraph.
     Use an advanced reading level similar to the input text, and ensure that all people, places, and other proper names and dates are included in the summary.
@@ -61,14 +62,24 @@ def summarize_text(text, seed=None):
     return run_llm(system, text, seed=seed)
 
 def get_popular_symbol(input, seed=None):
-    """
+    '''
     Identifies the company's stock ticker based on the user's query.
-    If the input lacks a company name, guides the user to provide relevant information.
+    If the input lacks a company name, returns 'None'
     Prioritizes common stocks from NASDAQ and NYSE.
-    """
-    system = '''Identify the company's stock ticker based on the user's query below.
+    Example:
+    >>> get_popular_symbol("Apple")
+    'AAPL'
+    >>> get_popular_symbol("Tesla")
+    'TSLA'
+    >>> get_popular_symbol("Microsoft")
+    'MSFT'
+    >>> get_popular_symbol("")
+    'None'
+    '''
+    system = """Identify the company's stock ticker based on the user's query below.
     Prioritize common stocks from NASDAQ and NYSE.
-    You are only allowed to include the stock ticker in your response.'''
+    You are only allowed to include the stock ticker in your response.
+    Return 'None' if user input is empty or no ticker found."""
     return run_llm(system, input, seed=seed)
 
 def get_quote(ticker, mock_data=None):
@@ -175,17 +186,16 @@ def google_search(query, api_key, cse_id, num_results=5, date_restrict="m1"):
             except ValueError:
                 logging.warning(f"Invalid date format for article: {result}")
                 result["date"] = None
-
+            
         # Sort results: prioritize by preferred domains and then by date
-        sorted_results = sorted(
-            filtered_results,
-            key=lambda x: (
-                any(domain in x.get("link", "") for domain in preferred_domains),
-                datetime.fromisoformat(x["date"]) if x.get("date") else datetime.min
-            ),
-            reverse=True
-        )
+        def sort_key(result):
+            in_preferred = any(domain in result.get("link", "") for domain in preferred_domains)
+            date = datetime.fromisoformat(result["date"]).replace(tzinfo=None) if result.get("date") else datetime.min
+            return (in_preferred, date)
+
+        sorted_results = sorted(filtered_results, key=sort_key, reverse=True)
         return sorted_results
+
     except Exception as e:
         logging.error(f"Error during Google Search: {e}")
         return []
@@ -243,9 +253,14 @@ def generate_response(user_query):
 def rag(text):
     '''
     This function uses retrieval augmented generation (RAG) to generate an LLM response to the input text.
+
+    >>> rag("")
+    'Please provide a company name or a stock symbol in your query.'
     '''
 
     ticker = get_popular_symbol(text)
+    if ticker=='None':
+        return 'Please provide a company name or a stock symbol in your query.'
     print(f"Stock Ticker:\n{ticker}\n")
 
     quote = get_quote(ticker)
@@ -284,7 +299,7 @@ if __name__ == "__main__":
    import doctest  
    doctest.testmod(verbose=True)
    logging.basicConfig(
-       format='%(asctime)s %(levelname)-8s %(message)s',
+       format='%(asctime)s [%(levelname)s] %(message)s',
        datefmt='%Y-%m-%d %H:%M:%S',
        level=logging.WARNING,
    )
