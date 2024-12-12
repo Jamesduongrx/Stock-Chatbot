@@ -4,15 +4,20 @@
 
 The **Stock Recommendation Chatbot** is an AI-powered assistant designed to deliver stock recommendations and pitch-ready investment insights. By leveraging real-time financial data, news articles, and user inputs, it supports decision-making for buying, holding, or selling stocks, as well as answering general market-related questions.
 
-## Key features include:
+## Key Features Include:
 1.	**Real-Time Analysis**
     Processes concurrent financial news, company performance, and market trends to provide timely and accurate insights.
 2.	**User-Centric Design**
     Tailors recommendations based on user queries and preferences.
 3.	**Investment Pitch Support**
     Generates insights ready for pitching to investment funds or for personal strategies.
+4.	**Advanced Functionalities**
+    * Leverages Groq LLM API: Delivers natural language processing and intelligent responses.
+	* Utilizes Finnhub API: Retrieves real-time financial data for market analysis and insights.
+	* Performs Article Searches with Google API: Incorporates the latest news and trends.
+	* Implements Retrieval-Augmented Generation (RAG): Enhances context-driven answers by combining retrieved data with AI-generated insights.
 
-This chatbot is built to offer precise, actionable advice to assist users in navigating complex financial landscapes efficiently.
+This chatbot is built to offer precise, actionable advice to assist users in navigating complex financial landscapes efficiently. Whether you’re preparing an investment pitch or looking for real-time market insights, the Stock Recommendation Chatbot provides the tools and knowledge you need.
 
 ---
 
