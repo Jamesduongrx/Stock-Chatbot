@@ -1,8 +1,8 @@
-# Stock Recommendation Chatbot ![](https://github.com/Jamesduongrx/Stock-Chatbot/actions/workflows/tests.yml/badge.svg)
+# Stock Recommendation Chatbot 
 
-## Overview
+[![Tests](https://github.com/Jamesduongrx/Stock-Chatbot/actions/workflows/tests.yml/badge.svg)](https://github.com/Jamesduongrx/Stock-Chatbot/actions/workflows/tests.yml)
 
-The **Stock Recommendation Chatbot** is an intelligent assistant designed to deliver stock recommendations and pitch-ready investment insights. By leveraging real-time financial data, news articles, and user inputs, it supports decision-making for buying, holding, or selling stocks, as well as answering general market-related questions.
+The **Stock Recommendation Chatbot** is an AI-powered assistant designed to deliver stock recommendations and pitch-ready investment insights. By leveraging real-time financial data, news articles, and user inputs, it supports decision-making for buying, holding, or selling stocks, as well as answering general market-related questions.
 
 ## Key features include:
 1.	**Real-Time Analysis**
@@ -14,6 +14,8 @@ The **Stock Recommendation Chatbot** is an intelligent assistant designed to del
 
 This chatbot is built to offer precise, actionable advice to assist users in navigating complex financial landscapes efficiently.
 
+---
+
 ## Getting Started
 
 ### Prerequisites
@@ -22,59 +24,67 @@ Before proceeding, check that you have the following installed:
 
 - Python 3.8 or 3.9
 - Groq API key
-- Finnhub API Key
-- Google API Key
+- Finnhub API key
+- Google API key
 - GOOGLE CSE ID
 
 ### Installation
 1. **Clone the repository:**
-```
+
+```bash
 $ git clone https://github.com/Jamesduongrx/Stock-Chatbot
 ```
 
 2. **Create a virtual environment:**
 
-```
+```bash
 $ python3.9 -m venv venv
 $ source venv/bin/activate
 ```
 
 3. **Install the necessary Python packages:**
 
-```
+```bash
 $ pip3 install -r requirements.txt
 ```
 
 4. **Set up a GROQ API key:**
-    - Create your GROQ API key at https://groq.com/
-    - Create your Google API key at https://cloud.google.com/docs/authentication/api-keys
-    - Create your Google CSE ID key at https://programmablesearchengine.google.com/about/
-    - Create your Finnhub API key at https://finnhub.io/
+    - [Create your GROQ API key](https://groq.com/)
+    - [Create your Google API key](https://cloud.google.com/docs/authentication/api-keys)
+    - [Create your Google CSE ID](https://programmablesearchengine.google.com/about/)
+    - [Create your Finnhub API key](https://finnhub.io/)
     - Create a `.env` file in the project root directory and add your Groq API key.
     
-    ```
-    GROQ_API_KEY=your_groq_api_key_here
-    GOOGLE_API_KEY=your_google_api_key_here
-    GOOGLE_CSE_ID=your_google_cse_id_here
-    FINN_API_KEY=your_finnhub_api_key_here
+    ```env
+    $ GROQ_API_KEY=your_groq_api_key_here
+    $ GOOGLE_API_KEY=your_google_api_key_here
+    $ GOOGLE_CSE_ID=your_google_cse_id_here
+    $ FINN_API_KEY=your_finnhub_api_key_here
     ```
 
     - Export the environmental variables:
-        ```
+
+        ```bash
         $ export $(cat .env)
         ```
 
 ### Running the Application
 Once your environment is set up, you can start Chatbot:
-```
+
+```bash
 $ python3 chatbot.py
 ```
 
 ### Example Usage
 After starting the application, you can interact with it via the command line interface:
 
+```bash
+$ python3 chatbot.py
 ```
-$ python3 chatbot.py 
+
+#### Example Interaction:
+
+```
 Stock Recommendation Chatbot: Should I buy Tesla Stock
 
 Stock Ticker: TSLA
@@ -83,31 +93,36 @@ Recommendations: Period: 2024-12-01, Strong Buy: 10, Buy: 18, Hold: 19, Sell: 9,
 Period: 2024-11-01, Strong Buy: 10, Buy: 17, Hold: 21, Sell: 8, Strong Sell: 4
 Period: 2024-10-01, Strong Buy: 10, Buy: 17, Hold: 20, Sell: 8, Strong Sell: 4
 Period: 2024-09-01, Strong Buy: 10, Buy: 16, Hold: 21, Sell: 8, Strong Sell: 4
+
 Based on the provided data, there are varying opinions on whether to buy Tesla stock. Some analysts, like Bank of America, recommend a buy, citing Tesla's strategic initiatives and self-funding status. Others, like JPMorgan, are more cautious, downgrading their rating to underweight due to concerns about the sustainability of Tesla's strong earnings. Additionally, some users on Reddit have expressed concerns about Elon Musk's priorities, potentially impacting Tesla's long-term success. However, Kiplinger suggests holding, citing a divided analyst consensus and a 20% decline implied by the average price target. Considering the mixed signals, it's essential to evaluate your individual circumstances, investment goals, and risk tolerance before making a decision.
 ```
 
-### Chatbot's First Test Case Accuracy 
+### Chatbot Test Cases
 
-Run the chatbot's first test case on terminal. The first test case focuses on evaluating the chatbot's ability to match stock recommendations (e.g., "buy," "sell") based on a specific source (e.g., Bloomberg)
+#### Test Case 1: Stock Recommendation Matching
 
-```
+This test evaluates the chatbot’s ability to match stock recommendations (e.g., “buy,” “sell”) based on a specific source (e.g., Bloomberg). Run the test case using:
+
+```bash
 $ python3 test_chatbot1.py
 ```
 
-Output:
+#### Output:
+
 ```
 Accuracy: 5/6
 ```
 
-### Chatbot's First Test Case Accuracy 
+#### Test Case 2: Stock Recommendation Matching
 
-Run the chatbot's second test case on a terminal. The second test case evaluates the chatbot's ability to identify and extract industry-related and financial information for a company. It requires the chatbot to extract related keywords from a query.
+This test evaluates the chatbot’s ability to extract industry-related and financial information for a company by identifying relevant keywords from a query. Run the test case using:
 
-```
+```bash
 $ python3 test_chatbot2.py
 ```
 
-Output:
+#### Output:
+
 ```
 Accuracy: 5/7 (71.43%)
 ```
