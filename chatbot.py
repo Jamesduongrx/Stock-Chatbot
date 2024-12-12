@@ -15,6 +15,7 @@ import os
 import requests
 import readline
 from bs4 import BeautifulSoup
+from datetime import datetime
 import finnhub
 
 ################################################################################
@@ -52,7 +53,11 @@ def run_llm(system, user, model='llama3-8b-8192', seed=None):
     return chat_completion.choices[0].message.content
 
 def summarize_text(text, seed=None):
-    system = 'Summarize the input text below. Limit the summary to 1 paragraph. Use an advanced reading level similar to the input text, and ensure that all people, places, and other proper names and dates are included in the summary. Only include the summary.'
+    system = '''Summarize the input text below.
+    Limit the summary to 1 paragraph.
+    Use an advanced reading level similar to the input text, and ensure that all people, places, and other proper names and dates are included in the summary.
+    When possible, keep buy/hold/sell ratings, challenges the company faces, and financial information in the summary.
+    Only include the summary.'''
     return run_llm(system, text, seed=seed)
 
 def get_popular_symbol(input, seed=None):
@@ -63,7 +68,7 @@ def get_popular_symbol(input, seed=None):
     """
     system = '''Identify the company's stock ticker based on the user's query below.
     Prioritize common stocks from NASDAQ and NYSE.
-    Return only the stock ticker in your response.'''
+    You are only allowed to include the stock ticker in your response.'''
     return run_llm(system, input, seed=seed)
 
 def get_quote(ticker):
@@ -107,15 +112,26 @@ def get_recommendations(ticker):
 # Google and Article Processing Functions
 ################################################################################
 
-def google_search(query, api_key, cse_id, num_results=5):
+def google_search(query, api_key, cse_id, num_results=5, date_restrict="m1"):
     """
     Perform a Google Custom Search for articles based on the query.
     Exclude blacklisted domains and prioritize accessible sources.
+    Adjust date_restrict parameter according to preference:
+    dN: last N days,
+    wN: last N weeks,
+    mN: last N months
+    yN: last N years 
     """
     search_url = "https://www.googleapis.com/customsearch/v1"
-    params = {"q": query, "key": api_key, "cx": cse_id, "num": num_results}
-    preferred_domains = ["finance.yahoo.com", "reuters.com", "seekingalpha.com", "nasdaq.com"]
-    blacklist = ["investors.com", "marketwatch.com", "motleyfool.com"]
+    params = {
+        "q": query,
+        "key": api_key,
+        "cx": cse_id,
+        "num": num_results,
+        "dateRestrict": date_restrict  # Filter results based on recency
+       }
+    preferred_domains = ["finance.yahoo.com", "bloomberg.com", "morningstar.com", "seekingalpha.com", "nasdaq.com"]
+    blacklist = ["investors.com", "marketwatch.com", "reuters.com", "motleyfool.com"]
 
     try:
         response = requests.get(search_url, params=params, timeout=10)
@@ -124,10 +140,21 @@ def google_search(query, api_key, cse_id, num_results=5):
 
         # Filter out blacklisted domains
         filtered_results = [
-            {"title": item.get("title"), "link": item.get("link")}
+            {
+                "title": item.get("title"),
+                "link": item.get("link"),
+                "date": item.get("pagemap", {}).get("metatags", [{}])[0].get("article:published_time")
+            }
             for item in results
             if all(domain not in item.get("link", "") for domain in blacklist)
         ]
+
+        # Sort results by publication date (if available)
+        sorted_results = sorted(
+            filtered_results,
+            key=lambda x: datetime.fromisoformat(x["date"]) if x.get("date") else datetime.min,
+            reverse=True
+        )
 
         # Prioritize preferred domains
         prioritized_results = sorted(
@@ -206,7 +233,7 @@ def rag(text):
     print(f"Recommendations: {recommendations}") #testing
 
     article_summaries = generate_response(text)
-    #print(f"Article Summaries: {article_summaries}\n") #testing
+    print(f"Article Summaries: {article_summaries}\n") #testing
 
     system = """You are a professional stock analyst and advisor tasked with answering user queries based on the provided information. 
     Do not take into account any knowledge outside of the articles in your answer.
@@ -214,7 +241,9 @@ def rag(text):
     You are not allowed to mention the source of your information. 
     Your responses must be concise, accurate, and directly address the user's question in at most three complete sentences. 
     Answer the user as if you have personally conducted the research and are providing a professional summary of the findings.
-    Incorporate relevant insights from the financial data, stock recommendations, and article summaries provided. 
+    Incorporate relevant insights from the financial data, stock recommendations, and article summaries provided.
+    You should only use the stock recommendations if no specific source is requested since it is aggregated across many sources.
+    Include 'Yes' or "No' in your answer when applicable.
     Stop responding once you have provided the necessary answer.
     """
     system += quote
