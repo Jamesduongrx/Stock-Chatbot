@@ -246,16 +246,16 @@ def rag(text):
     '''
 
     ticker = get_popular_symbol(text)
-    print(f"Stock Ticker: {ticker}")
+    print(f"Stock Ticker:\n{ticker}\n")
 
     quote = get_quote(ticker)
-    print(f"Quote: {quote}") #testing
+    print(f"Quote:\n{quote}\n") #testing
 
     recommendations = get_recommendations(ticker)
-    print(f"Recommendations: {recommendations}") #testing
+    print(f"Recommendations:\n{recommendations}\n") #testing
 
     article_summaries = generate_response(text)
-    print(f"Article Summaries: {article_summaries}\n") #testing
+    print(f"Article Summaries:\n{article_summaries}\n") #testing
 
     system = """You are a professional stock analyst and advisor tasked with answering user queries based on the provided information. 
     Do not take into account any knowledge outside of the financial data, stock recommendation, or provided article summaries in your answer.
