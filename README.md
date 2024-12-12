@@ -17,7 +17,7 @@ The **Stock Recommendation Chatbot** is an AI-powered assistant designed to deli
 	* Performs Article Searches with Google API: Incorporates the latest news and trends.
 	* Implements Retrieval-Augmented Generation (RAG): Enhances context-driven answers by combining retrieved data with AI-generated insights.
 
-This chatbot is built to offer precise, actionable advice to assist users in navigating complex financial landscapes efficiently. Whether you’re preparing an investment pitch or looking for real-time market insights, the Stock Recommendation Chatbot provides the tools and knowledge you need.
+This chatbot is built to offer precise, actionable advice to assist users in navigating intricate financial landscapes efficiently.
 
 ---
 
