@@ -85,3 +85,29 @@ Period: 2024-10-01, Strong Buy: 10, Buy: 17, Hold: 20, Sell: 8, Strong Sell: 4
 Period: 2024-09-01, Strong Buy: 10, Buy: 16, Hold: 21, Sell: 8, Strong Sell: 4
 Based on the provided data, there are varying opinions on whether to buy Tesla stock. Some analysts, like Bank of America, recommend a buy, citing Tesla's strategic initiatives and self-funding status. Others, like JPMorgan, are more cautious, downgrading their rating to underweight due to concerns about the sustainability of Tesla's strong earnings. Additionally, some users on Reddit have expressed concerns about Elon Musk's priorities, potentially impacting Tesla's long-term success. However, Kiplinger suggests holding, citing a divided analyst consensus and a 20% decline implied by the average price target. Considering the mixed signals, it's essential to evaluate your individual circumstances, investment goals, and risk tolerance before making a decision.
 ```
+
+### Chatbot's First Test Case Accuracy 
+
+Run the chatbot's first test case on terminal. The first test case focuses on evaluating the chatbot's ability to match stock recommendations (e.g., "buy," "sell") based on a specific source (e.g., Bloomberg)
+
+```
+$ python3 test_chatbot1.py
+```
+
+Output:
+```
+Accuracy: 5/6
+```
+
+### Chatbot's First Test Case Accuracy 
+
+Run the chatbot's second test case on a terminal. The second test case evaluates the chatbot's ability to identify and extract industry-related and financial information for a company. It requires the chatbot to extract related keywords from a query.
+
+```
+$ python3 test_chatbot2.py
+```
+
+Output:
+```
+Accuracy: 5/7 (71.43%)
+```
