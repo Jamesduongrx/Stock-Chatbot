@@ -2,6 +2,7 @@
 
 ## Overview
 
+
 The Stock Recommendation Chatbot is a chatbot assistant designed to provide stock recommendations and pitch-ready investment insights. By analyzing real-time financial data, news articles, and user inputs, the chatbot can help users make informed decisions about buying, holding, or selling stocks as well as general market or stock questions.
 
 With its ability to analyze recent events, company performance, and market trends, the chatbot delivers concise insights tailored to user queries. 
