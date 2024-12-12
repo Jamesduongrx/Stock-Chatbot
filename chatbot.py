@@ -164,21 +164,28 @@ def google_search(query, api_key, cse_id, num_results=5, date_restrict="m1"):
             if all(domain not in item.get("link", "") for domain in blacklist)
         ]
 
-        # Sort results by publication date (if available)
+        # Validate and parse dates
+        for result in filtered_results:
+            date_str = result.get("date")
+            try:
+                if date_str:
+                    result["date"] = datetime.fromisoformat(date_str).isoformat()
+                else:
+                    result["date"] = None  # Handle missing dates
+            except ValueError:
+                logging.warning(f"Invalid date format for article: {result}")
+                result["date"] = None
+
+        # Sort results: prioritize by preferred domains and then by date
         sorted_results = sorted(
             filtered_results,
-            key=lambda x: datetime.fromisoformat(x["date"]) if x.get("date") else datetime.min,
+            key=lambda x: (
+                any(domain in x.get("link", "") for domain in preferred_domains),
+                datetime.fromisoformat(x["date"]) if x.get("date") else datetime.min
+            ),
             reverse=True
         )
-
-        # Prioritize preferred domains
-        prioritized_results = sorted(
-            filtered_results,
-            key=lambda x: any(domain in x.get("link", "") for domain in preferred_domains),
-            reverse=True
-        )
-
-        return prioritized_results
+        return sorted_results
     except Exception as e:
         logging.error(f"Error during Google Search: {e}")
         return []
@@ -209,7 +216,7 @@ def generate_response(user_query):
     """
     Generate a response by searching for articles and summarizing their content.
     """
-    articles = google_search(user_query, GOOGLE_API_KEY, GOOGLE_CSE_ID, num_results=3)
+    articles = google_search(user_query, GOOGLE_API_KEY, GOOGLE_CSE_ID, num_results=5)
     if not articles:
         return "No relevant articles found. Please refine your query."
 
@@ -251,12 +258,12 @@ def rag(text):
     print(f"Article Summaries: {article_summaries}\n") #testing
 
     system = """You are a professional stock analyst and advisor tasked with answering user queries based on the provided information. 
-    Do not take into account any knowledge outside of the articles in your answer.
-    Do not add any extra details, opinions, unnecessary explanations.
+    Do not take into account any knowledge outside of the financial data, stock recommendation, or provided article summaries in your answer.
+    Do not add any extra details, opinions, or unecessary explanations.
     You are not allowed to mention the source of your information. 
-    Your responses must be concise, accurate, and directly address the user's question in at most three complete sentences. 
-    Answer the user as if you have personally conducted the research and are providing a professional summary of the findings.
-    Incorporate relevant insights from the financial data, stock recommendations, and article summaries provided.
+    Directly address the user's question via concise and accurate incorporation of relevant information.
+    Answer in at most four complete sentences like you are giving a professional report via conversation. 
+    Answer like you personally conducted the research yourself.
     You should only use the stock recommendations if no specific source is requested since it is aggregated across many sources.
     Include 'Yes' or "No' in your answer when applicable.
     Stop responding once you have provided the necessary answer.

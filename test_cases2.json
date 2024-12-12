@@ -1,5 +1,5 @@
 [
-    {"company": "Apple", "challenges": ["cybersecurity", "competition"]},
-    {"company": "Tesla", "challenges": ["demand", "CEO"]},
-    {"company": "Microsoft", "challenges": ["antitrust", "gaming"]}
+    {"company": "Apple", "challenges": [["AI", "artificial intelligence"], ["cashless", "transaction", "demand", "payment"], ["developer", "smartphone","phone","license", "app"]]},
+    {"company": "Tesla", "challenges": [["demand", "production", "delivery"],["China", "Chinese", "supply chain", "competition", "semiconductor", "chip"]]},
+    {"company": "Microsoft", "challenges": [["China", "Chinese", "supply chain", "competition", "semiconductor", "chip"], ["data", "cybersecurity", "cyber", "union", "credit"]]}
 ]
