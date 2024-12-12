@@ -1,4 +1,5 @@
-# Stock Recommendation Chatbot ![](https://github.com/Jamesduongrx/Stock-Chatbot/workflows/tests/badge.svg?dummy=timestamp)
+# Stock Recommendation Chatbot ![](https://github.com/Jamesduongrx/Stock-Chatbot/actions/workflows/test.yml/badge.svg)
+
 
 ## Overview
 
