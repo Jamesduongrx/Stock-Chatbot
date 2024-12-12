@@ -46,8 +46,9 @@ def test_chatbot1():
                 print("Incorrect")
 
     # Calculate and print accuracy
-    accuracy = f"{correct_predictions}/{total_tests}"
-    print(f"Accuracy: {accuracy}")
+    accuracy_fraction = f"{correct_predictions}/{total_tests}"
+    accuracy_percentage = (correct_predictions / total_tests) * 100
+    print(f"Accuracy: {accuracy_fraction} ({accuracy_percentage:.2f}%)")
 
 # Run the test
 if __name__ == "__main__":
