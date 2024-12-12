@@ -1,4 +1,4 @@
-# Stock Recommendation Chatbot![](https://github.com/Jamesduongrx/Stock-Chatbot/actions/workflows/test.yml/badge.svg)
+![](https://github.com/Jamesduongrx/Stock-Chatbot/actions/workflows/tests.yml/badge.svg)
 
 ## Overview
 
