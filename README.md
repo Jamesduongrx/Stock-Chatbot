@@ -40,7 +40,7 @@ $ pip3 install -r requirements.txt
 
 4. **Set up a GROQ API key:**
     - Create your GROQ API key at https://groq.com/
-    - Create your Google API key at https://developers.google.com/maps/documentation/javascript/get-api-key
+    - Create your Google API key at https://cloud.google.com/docs/authentication/api-keys
     - Create your Google CSE ID key at https://programmablesearchengine.google.com/about/
     - Create your Finnhub API key at https://finnhub.io/
     - Create a `.env` file in the project root directory and add your Groq API key.
