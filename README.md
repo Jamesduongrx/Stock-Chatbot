@@ -6,12 +6,6 @@ The Stock Recommendation Chatbot is a chatbot assistant designed to provide stoc
 
 With its ability to analyze recent events, company performance, and market trends, the chatbot delivers concise insights tailored to user queries. 
 
-## Key Features
-
-- Retrieval-Augmented Generation (RAG): Efficiently fetches relevant articles to improve response accuracy.
-- News Integration: Processes user queries using a dynamic database of news articles.
-- Groq API Powered: Leverages Groq models for natural language processing.
-
 ## Getting Started
 
 # Prerequisites
@@ -19,17 +13,15 @@ With its ability to analyze recent events, company performance, and market trend
 Before proceeding, check that you have the following installed:
 
 - Python 3.8 or 3.9
-- A Groq API key (instructions below)
+- Groq API key (instructions below)
+- Finnhub API Key
+- Google API Key
+- GOOGLE CSE ID
 
 # Installation
-
-To get started with `ragnews`, follow these steps to set up your
-development environment and run the application:
-
 1. **Clone the repository:**
 ```
-$ git clone https://github.com/EthanTu2/ragnews.git
-$ cd ragnews
+$ git clone https://github.com/Jamesduongrx/Stock-Chatbot
 ```
 
 2. **Create a virtual environment:**
@@ -46,11 +38,18 @@ $ pip3 install -r requirements.txt
 ```
 
 4. **Set up a GROQ API key:**
-    - Create an API key at https://groq.com/
+    - Create your GROQ API key at https://groq.com/
+    - Create your Google API key at https://developers.google.com/maps/documentation/javascript/get-api-key
+    - Create your Google CSE ID key at https://programmablesearchengine.google.com/about/
+    - Create your Finnhub API key at https://finnhub.io/
     - Create a `.env` file in the project root directory and add your Groq API key.
     
     ```
-    GROQ_API_KEY=your_api_key_here
+    GROQ_API_KEY=your_groq_api_key_here
+    GOOGLE_API_KEY=your_google_api_key_here
+    GOOGLE_CSE_ID=your_google_cse_id_here
+    FINN_API_KEY=your_finnhub_api_key_here
+
     ```
 
     - Export the environmental variables:
@@ -60,16 +59,23 @@ $ pip3 install -r requirements.txt
         ```
 
 ## Running the Application
-Once your environment is set up, you can start RAGNews:
+Once your environment is set up, you can start Chatbot:
 ```
-$ python3 ragnews.py
+$ python3 chatbot.py
 ```
 
 ### Example Usage
 After starting the application, you can interact with it via the command line interface:
 
 ```
-$ python3 ragnews.py 
-ragnews> What is the current democratic presidential nominee?
-The current Democratic presidential nominee is Kamala Harris.
+$ python3 chatbot.py 
+Stock Recommendation Chatbot: Should I buy Tesla Stock
+
+Stock Ticker: TSLA
+Quote: Current price: 424.77, Change: 23.78, Percent change: 5.93%, High price of the day: 424.88, Low price of the day: 402.38, Open price of the day: 409.7, Previous close price: 400.99
+Recommendations: Period: 2024-12-01, Strong Buy: 10, Buy: 18, Hold: 19, Sell: 9, Strong Sell: 4
+Period: 2024-11-01, Strong Buy: 10, Buy: 17, Hold: 21, Sell: 8, Strong Sell: 4
+Period: 2024-10-01, Strong Buy: 10, Buy: 17, Hold: 20, Sell: 8, Strong Sell: 4
+Period: 2024-09-01, Strong Buy: 10, Buy: 16, Hold: 21, Sell: 8, Strong Sell: 4
+Based on the provided data, there are varying opinions on whether to buy Tesla stock. Some analysts, like Bank of America, recommend a buy, citing Tesla's strategic initiatives and self-funding status. Others, like JPMorgan, are more cautious, downgrading their rating to underweight due to concerns about the sustainability of Tesla's strong earnings. Additionally, some users on Reddit have expressed concerns about Elon Musk's priorities, potentially impacting Tesla's long-term success. However, Kiplinger suggests holding, citing a divided analyst consensus and a 20% decline implied by the average price target. Considering the mixed signals, it's essential to evaluate your individual circumstances, investment goals, and risk tolerance before making a decision.
 ```
