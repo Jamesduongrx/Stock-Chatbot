@@ -17,6 +17,8 @@ import readline
 from bs4 import BeautifulSoup
 from datetime import datetime, timezone
 import finnhub
+import sys
+import ast
 
 ################################################################################
 # Core LLM and API Functions
@@ -68,18 +70,31 @@ def get_popular_symbol(input, seed=None):
     Prioritizes common stocks from NASDAQ and NYSE.
     Example:
     >>> get_popular_symbol("Apple")
-    'AAPL'
+    "['AAPL']"
     >>> get_popular_symbol("Tesla")
-    'TSLA'
+    "['TSLA']"
     >>> get_popular_symbol("Microsoft")
-    'MSFT'
+    "['MSFT']"
+    >>> get_popular_symbol("Is Tesla a good buy?")
+    "['TSLA']"
+    >>> get_popular_symbol("Is Google better than Amazon, Microsoft, and Apple?")
+    "['GOOGL', 'AMZN', 'MSFT', 'AAPL']"
     >>> get_popular_symbol("")
     'None'
     '''
-    system = """Identify the company's stock ticker based on the user's query below.
+    if input=="":
+        return 'None'
+    system = """Identify what company the user is interested in based on the query below.
     Prioritize common stocks from NASDAQ and NYSE.
-    You are only allowed to include the stock ticker in your response.
-    Return 'None' if user input is empty or no ticker found."""
+    If no specific company or tickers are included, only give at most 2 companies that relate to the query.
+    Do not include any extra details, opinions, or unecessary explanations.
+    Return the stock tickers of the companies as a python list.
+    If only one company is in the query return the ticker for that one company.
+    Examples: 
+    "Is Tesla a good buy?" A good response is ['TSLA'].
+    "If I think LLMs are good for the future, which stocks should I buy?" A good response is ['APPL', 'MSFT']
+    "Is Google better than Amazon, Microsoft, and Apple" A good response is ['GOOGL', 'AMZN', 'MSFT', 'AAPL']
+    """
     return run_llm(system, input, seed=seed)
 
 def get_quote(ticker, mock_data=None):
@@ -257,20 +272,11 @@ def rag(text):
     >>> rag("")
     'Please provide a company name or a stock symbol in your query.'
     '''
-
-    ticker = get_popular_symbol(text)
-    if ticker=='None':
+    if text == "":
         return 'Please provide a company name or a stock symbol in your query.'
-    print(f"Stock Ticker:\n{ticker}\n")
-
-    quote = get_quote(ticker)
-    print(f"Quote:\n{quote}\n") #testing
-
-    recommendations = get_recommendations(ticker)
-    print(f"Recommendations:\n{recommendations}\n") #testing
-
-    article_summaries = generate_response(text)
-    print(f"Article Summaries:\n{article_summaries}\n") #testing
+    ticker = get_popular_symbol(text)
+    if ticker == 'None':
+        return 'Please provide a company name or a stock symbol in your query.'
 
     system = """You are a professional stock analyst and advisor tasked with answering user queries based on the provided information. 
     Do not take into account any knowledge outside of the financial data, stock recommendation, or provided article summaries in your answer.
@@ -283,11 +289,25 @@ def rag(text):
     Include 'Yes' or "No' in your answer when applicable.
     Stop responding once you have provided the necessary answer.
     """
-    system += quote
-    system += recommendations
+
+    converted_list = ast.literal_eval(ticker)
+    for stock in converted_list:
+        print(f"Stock Ticker:\n{stock}\n")
+        quote = get_quote(stock)
+        print(f"Quote:\n{quote}\n") 
+        system += f"Quote for {stock}:\n{quote}"
+
+        recommendations = get_recommendations(stock)
+        print(f"Aggregated Analyst Ratings for {stock}:\n{recommendations}\n") 
+        system += f"Aggregated Analyst Ratings for {stock}:\n{recommendations}"
+
+    article_summaries = generate_response(text)
+    print(f"Article Summaries:\n{article_summaries}\n") 
     system += article_summaries
+
     system += f"User query: {text}"
 
+    print("Chatbot Answer:\n")
     return run_llm(system, text)
 
 
@@ -296,21 +316,28 @@ def rag(text):
 ################################################################################
 
 if __name__ == "__main__":
-   import doctest  
-   doctest.testmod(verbose=True)
-   logging.basicConfig(
-       format='%(asctime)s [%(levelname)s] %(message)s',
-       datefmt='%Y-%m-%d %H:%M:%S',
-       level=logging.WARNING,
-   )
-   print("Please include the name of the company or its ticker and your question in complete sentences.\nEnter 'exit' or 'quit' to end the conversation.")
-   while True:
-    try:
-        query = input("Stock Recommendation Chatbot: ").strip()
-        if query.lower() in {"exit", "quit"}:
-            print("Exiting the chatbot. Goodbye!")
-            break
-        if query:
-            print(rag(query))
-    except Exception as e:
-        logging.error(f"An unexpected error occurred: {e}")
+    logging.basicConfig(
+        format='%(asctime)s [%(levelname)s] %(message)s',
+        datefmt='%Y-%m-%d %H:%M:%S',
+        level=logging.WARNING,
+    )
+
+    if len(sys.argv) > 1 and sys.argv[1] == "doctests":
+        import doctest
+        doctest.testmod(verbose=True)
+    else:
+        print("Please include the name of the company or its ticker and your question in complete sentences.")
+        print("Enter 'exit' or 'quit' to end the conversation.")
+        while True:
+            try:
+                query = input("Chatbot>: ").strip()
+                if query.lower() in {"exit", "quit"}:
+                    print("Exiting the chatbot. Goodbye!")
+                    break
+                if query:
+                    response = rag(query)
+                    print(response, "\n\n---\n")
+                else:
+                    print("Please enter a valid question or command.")
+            except Exception as e:
+                logging.error(f"An unexpected error occurred: {e}")

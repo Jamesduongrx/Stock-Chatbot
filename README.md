@@ -90,24 +90,39 @@ $ python3 chatbot.py
 #### Example Interaction:
 
 ```
-Stock Recommendation Chatbot: Should I buy Tesla Stock
+Stock Recommendation Chatbot: Is Amazon a good stock to buy?
 
 Stock Ticker:
-TSLA
+AMZN
 
 Quote:
-Current price: 424.77, Change: 23.78, Percent change: 5.93%, High price of the day: 424.88, Low price of the day: 402.38, Open price of the day: 409.7, Previous close price: 400.99
+Current price: 228.97, Change: -1.29, Percent change: -0.56%, High price of the day: 231.09, Low price of the day: 227.63, Open price of the day: 229.83, Previous close price: 230.26
 
-Recommendations: 
-Period: 2024-12-01, Strong Buy: 10, Buy: 18, Hold: 19, Sell: 9, Strong Sell: 4
-Period: 2024-11-01, Strong Buy: 10, Buy: 17, Hold: 21, Sell: 8, Strong Sell: 4
-Period: 2024-10-01, Strong Buy: 10, Buy: 17, Hold: 20, Sell: 8, Strong Sell: 4
-Period: 2024-09-01, Strong Buy: 10, Buy: 16, Hold: 21, Sell: 8, Strong Sell: 4
+Article Summaries:
+Title: Better AI Stock to Buy Today: Dell Technologies vs. Amazon
+URL: https://finance.yahoo.com/news/better-ai-stock-buy-today-120000918.html
+Summary: Dell Technologies and Amazon are among the companies benefiting from the growing popularity of artificial intelligence, particularly generative AI. Dell has witnessed strong growth, specifically in the AI server market, with its infrastructure solutions segment reporting a 38% increase in revenue to $11.6 billion in its last reported quarter. Within this segment, servers and networking revenue surged 80% to $7.7 billion. Meanwhile, Amazon has also been leveraging AI capabilities, although its focus is more on development and incorporation into its various products. Both companies have substantial potential, but Dell's strong growth in the AI server market makes it an attractive option for investors seeking to capitalize on this trend.
 
-Based on the provided data, there are varying opinions on whether to buy Tesla stock. Some analysts, like Bank of America, recommend a buy, citing Tesla's strategic initiatives and self-funding status. Others, like JPMorgan, are more cautious, downgrading their rating to underweight due to concerns about the sustainability of Tesla's strong earnings. Additionally, some users on Reddit have expressed concerns about Elon Musk's priorities, potentially impacting Tesla's long-term success. However, Kiplinger suggests holding, citing a divided analyst consensus and a 20% decline implied by the average price target. Considering the mixed signals, it's essential to evaluate your individual circumstances, investment goals, and risk tolerance before making a decision.
+Title: AMZN Stock vs. GOOG Stock: Which Is the Better Buy Today ...
+URL: https://www.cabotwealth.com/daily/growth-stocks/amzn-stock-goog-stock-better-buy
+Summary: Here is a summary of the input text in 1 paragraph, written at an advanced reading level with proper names, dates, and financial information included:
+
+Amazon (AMZN) and Alphabet (GOOG) are two of the world's most recognizable brands, with a long-term trajectory still favorably inclined. Despite being battered by the growth stock sell-off of 2022, both stocks have rebounded impressively, with GOOG rising 99% since 2023's start and AMZN surging 168% over the same period. Over five years, GOOG has climbed 163%, outpacing AMZN's 157% gain and the S&P 500's 93%. As both companies have delivered exceptional returns, the question arises: can they replicate or exceed this performance over the next five years? Despite their impressive track records, it's unlikely they will continue to grow at this pace indefinitely, though it would be foolhardy to doubt their potential.
+
+Title: Could Buying Amazon Stock Today Set You Up for Life? | The ...
+URL: https://www.fool.com/investing/2024/11/16/could-buying-amazon-stock-today-set-you-up-for-lif/
+Summary: The Motley Fool, founded in 1993, is a financial services company that strives to make the world smarter, happier, and richer through its various platforms. The company reaches millions of people each month via its premium investing solutions, free guidance and market analysis on Fool.com, personal finance education, top-rated podcasts, and non-profit The Motley Fool Foundation. With its extensive resources, The Motley Fool helps individuals make informed investment decisions, with the option to also access top analyst recommendations, in-depth research, and investing resources through its premium membership.
+
+Chatbot Answer:
+
+Based on the current market data and analyst ratings, Amazon (AMZN) shows a Strong Buy signal with 21 analysts recommending a Strong Buy, 50 analysts recommending a Buy, and 0 analysts recommending a Sell or Strong Sell. The stock's current price is $228.97, with a recent strong growth trend in its AI server market and a solid track record of returns. 
+
+---
 ```
 
 ### Chatbot Test Cases
+
+To test, you may have to update `test_cases1.json` to reflect concurrent market trends if the sources have changed their recommendation for the given company. Similarly, you may have to update `test_cases2.json` to reflect concurrent challenges the respective companies are facing.
 
 #### Test Case 1: Stock Recommendation Matching
 
@@ -115,13 +130,10 @@ This test evaluates the chatbot’s ability to match stock recommendations (e.g.
 
 ```bash
 $ python3 test_chatbot1.py
-```
-
-#### Output:
-
-```
 Accuracy: 5/6 (83.33%)
 ```
+To test, you may have to update `test_cases1.json` to reflect concurrent market trends if the sources have changed their recommendation for the given company. 
+Similarly, you may have to update `test_cases2.json` to reflect concurrent challenges the respective companies are facing.
 
 #### Test Case 2: Stock Recommendation Matching
 
@@ -129,10 +141,5 @@ This test evaluates the chatbot’s ability to extract industry-related and fina
 
 ```bash
 $ python3 test_chatbot2.py
-```
-
-#### Output:
-
-```
 Accuracy: 5/7 (71.43%)
 ```
